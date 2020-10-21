@@ -1,6 +1,6 @@
 from random import Random
 import param as p
-from characters import *
+import characters as c
 import pygame
 
 
@@ -26,7 +26,7 @@ def showText(screen, text, pos, font_name, font_size, color):
 class CollisionDetector:
     @staticmethod
     def detect(obj1, obj2):
-        if isinstance(obj1, Bird) and isinstance(obj2, Obstacle):
+        if isinstance(obj1, c.Bird) and isinstance(obj2, c.Obstacle):
             xcenter = (obj2.x + 0.5 * obj2.width)
             # if center within boundary created by obstacle
             if abs(obj1.x - xcenter) <= 0.5 * obj2.width:
@@ -42,7 +42,7 @@ class CollisionDetector:
                 # if not aligned with opening
                 else:
                     return True
-        elif isinstance(obj1, Bird) and isinstance(obj2, Frame):
+        elif isinstance(obj1, c.Bird) and isinstance(obj2, c.Frame):
             return obj1.y - obj1.size <= 0 or obj1.y + obj1.size >= p.size[1]
         return False
 
@@ -57,7 +57,7 @@ class ObsGenerator:
         open_pos = Random().randrange(int(0.1 * (p.size[1] - 2 * p.open_rad) + p.open_rad),
                                       int(0.9 * (p.size[1] - 2 * p.open_rad) + p.open_rad))
         if len(obs_list) == 0 or obs_list[0].x + obs_list[0].width > 0:
-            obs = Obstacle(open_pos)
+            obs = c.Obstacle(open_pos)
         else:
             obs = obs_list.pop(0)
             obs.x = p.size[0]

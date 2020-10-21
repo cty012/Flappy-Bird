@@ -12,7 +12,7 @@ subtitle_pos = (500, 600)
 # GAME
 # env
 gravity = 0.5
-#pause
+# pause
 pause_rad = 70
 pause_lwidth = 30
 pause_rwidth = 45

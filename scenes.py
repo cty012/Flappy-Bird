@@ -1,7 +1,6 @@
 import pygame
 import param as p
-from characters import *
-from utils import *
+import utils
 
 
 def start(screen, clock, bird):
@@ -9,9 +8,9 @@ def start(screen, clock, bird):
     screen.fill(p.background)
     bird.show(screen)
     text = 'Flappy Circular Bird Floating in Vacuum'
-    showText(screen, text, p.title_pos, p.font, 50, (0, 0, 0))
-    text = 'press "Space" to play'
-    showText(screen, text, p.subtitle_pos, p.font, 30, (0, 0, 0))
+    utils.showText(screen, text, p.title_pos, p.font, 50, (0, 0, 0))
+    text = 'press "SPACE" to play'
+    utils.showText(screen, text, p.subtitle_pos, p.font, 30, (0, 0, 0))
     pygame.display.update()
 
     # detect operation
@@ -43,9 +42,9 @@ def game(screen, clock, bird, obs_list, frame, scoreboard):
 
     # detect collision
     collision = False
-    collision = collision or CollisionDetector.detect(bird, frame)
+    collision = collision or utils.CollisionDetector.detect(bird, frame)
     for obs in obs_list:
-        collision = collision or CollisionDetector.detect(bird, obs)
+        collision = collision or utils.CollisionDetector.detect(bird, obs)
     if collision:
         scoreboard.save_score()
         return 'fail'
@@ -62,8 +61,8 @@ def game(screen, clock, bird, obs_list, frame, scoreboard):
 
     # move
     dT = clock.get_time() * .06
-    if ObsGenerator.needNewObs(obs_list):
-        ObsGenerator.getNewObs(obs_list)
+    if utils.ObsGenerator.needNewObs(obs_list):
+        utils.ObsGenerator.getNewObs(obs_list)
     bird.move(dT)
     for obs in obs_list:
         obs.move(dT)
@@ -100,26 +99,30 @@ def pause(screen, clock):
     return 'pause'
 
 
-def fail(screen, clock, bird, obs_list, scoreboard):
+def fail(screen, scoreboard):
     # draw
     text = 'You Have Failed With a Score of {}'.format(scoreboard.score)
-    showText(screen, text, p.title_pos, p.font, 50, (255, 0, 0))
-    text = 'press "Space" to play again'
-    showText(screen, text, p.subtitle_pos, p.font, 30, (0, 0, 0))
+    utils.showText(screen, text, p.title_pos, p.font, 50, (255, 0, 0))
+    text = 'press "SPACE" to play again'
+    utils.showText(screen, text, p.subtitle_pos, p.font, 30, (0, 0, 0))
     pygame.display.update()
 
+    return 'failed'
+
+
+def failed(clock, bird, obs_list, scoreboard):
     # detect operation
     events = pygame.event.get()
     for e in events:
         if e.type == pygame.QUIT:
             return 'quit'
         elif e.type == pygame.KEYDOWN and e.key == pygame.K_SPACE:
-            init(bird, obs_list, scoreboard)
+            utils.init(bird, obs_list, scoreboard)
             return 'game'
         elif e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE:
-            init(bird, obs_list, scoreboard)
+            utils.init(bird, obs_list, scoreboard)
             return 'start'
 
     # wait
     clock.tick_busy_loop(80)
-    return 'fail'
+    return 'failed'

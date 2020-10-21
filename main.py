@@ -1,6 +1,6 @@
 import pygame
 import param as p
-from characters import *
+import characters as c
 import scenes
 pygame.init()
 
@@ -8,10 +8,10 @@ screen = pygame.display.set_mode(p.size)
 pygame.display.set_caption('Flappy Circular Bird Floating in Vacuum')
 pygame.display.set_icon(pygame.image.load('icon.png'))
 clock = pygame.time.Clock()
-bird = Bird()
+bird = c.Bird()
 obs_list = []
-frame = Frame()
-scoreboard = Scoreboard()
+frame = c.Frame()
+scoreboard = c.Scoreboard()
 
 flag = 'start'
 while flag != 'quit':
@@ -22,6 +22,8 @@ while flag != 'quit':
     elif flag == 'pause':
         flag = scenes.pause(screen, clock)
     elif flag == 'fail':
-        flag = scenes.fail(screen, clock, bird, obs_list, scoreboard)
+        flag = scenes.fail(screen, scoreboard)
+    elif flag == 'failed':
+        flag = scenes.failed(clock, bird, obs_list, scoreboard)
 
 pygame.quit()
